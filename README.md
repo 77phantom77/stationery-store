@@ -6,7 +6,7 @@
 
 | Часть | Стек |
 |-------|------|
-| Клиент | React 19, Vite, React Router, Axios |
+| Клиент | React 19, Vite, React Router |
 | Сервер | Node.js, Express 5, Mongoose |
 | База данных | MongoDB |
 
@@ -31,14 +31,12 @@ stationery-store/
 - Заказы, отзывы, контент (статьи и акции)
 - Настройки магазина, статистика
 
-## Запуск проекта
+## Требования
 
-### Требования
+- [Node.js](https://nodejs.org/) 18+
+- [MongoDB Community](https://www.mongodb.com/try/download/community) — локально на `mongodb://127.0.0.1:27017`
 
-- [Node.js](https://nodejs.org/) (версия 18+)
-- [MongoDB](https://www.mongodb.com/) (локально на `mongodb://127.0.0.1:27017`)
-
-### 1. Установка зависимостей
+## Установка
 
 ```bash
 cd client
@@ -48,27 +46,42 @@ cd ../server
 npm install
 ```
 
-### 2. Запуск MongoDB
+## Запуск
 
-Убедитесь, что MongoDB запущена. При первом старте сервер автоматически заполнит базу тестовыми данными.
+Нужны **два терминала** и **запущенная MongoDB**.
 
-### 3. Запуск сервера
+### Терминал 1 — сервер
 
 ```bash
 cd server
-node server.js
+npm start
 ```
 
-Сервер: `http://localhost:5000`
+Ожидаемый вывод:
+```
+Server running on port 5000
+MongoDB Connected to stationery_store
+```
 
-### 4. Запуск клиента
+При первом запуске база автоматически заполняется тестовыми данными.
+
+### Терминал 2 — клиент
 
 ```bash
 cd client
 npm run dev
 ```
 
-Сайт: `http://localhost:5173`
+Сайт: **http://127.0.0.1:5173**
+
+### Windows (PowerShell)
+
+Если `npm` не запускается из-за политики выполнения скриптов, используйте:
+
+```powershell
+npm.cmd run dev
+npm.cmd start
+```
 
 ## API
 
@@ -81,3 +94,9 @@ REST API на порту `5000`:
 - `GET/POST/PUT/DELETE /api/articles`
 - `GET/POST/PUT/DELETE /api/promos`
 - `GET/PUT /api/settings`
+
+## Что хранится в MongoDB
+
+Товары, категории, заказы, отзывы, статьи, акции, настройки магазина.
+
+Корзина и данные входа хранятся локально в браузере.
