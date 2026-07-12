@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
+import { useAppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const { addToCart } = useCart();
+  const { products } = useAppContext();
   const { user, orders, addresses, updateProfile, logoutUser } = useUser();
   const navigate = useNavigate();
 
@@ -27,15 +29,30 @@ const Profile = () => {
   }, [user]);
 
   const handleRepeatOrder = (order) => {
-    // В реальном приложении мы бы перебирали реальные товары из заказа.
-    // Для демо мы просто создаем один mock-товар на общую сумму заказа.
-    addToCart({ 
-      _id: `repeat-${order._id}`, 
-      name: `Товары из заказа №${order._id}`, 
-      price: order.total, 
-      image: '/images/1.webp', 
-      category: 'Повторный заказ' 
+    if (!order.items) return;
+
+    let added = 0;
+    order.items.split(', ').forEach((part) => {
+      const match = part.match(/^(.+?) \((\d+)шт\)$/);
+      if (!match) return;
+
+      const name = match[1].trim();
+      const quantity = parseInt(match[2], 10);
+      const product = products.find((p) => p.name === name);
+
+      if (product) {
+        for (let i = 0; i < quantity; i++) {
+          addToCart(product);
+        }
+        added += quantity;
+      }
     });
+
+    if (added > 0) {
+      alert(`В корзину добавлено ${added} товар(ов) из заказа`);
+    } else {
+      alert('Не удалось найти товары из этого заказа в каталоге');
+    }
   };
 
   const handleSaveProfile = (e) => {
