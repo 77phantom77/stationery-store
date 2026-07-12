@@ -11,7 +11,6 @@ const Profile = () => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('personal');
-  const [newAddress, setNewAddress] = useState('');
   
   // Локальное состояние формы редактирования
   const [formData, setFormData] = useState({
@@ -65,13 +64,6 @@ const Profile = () => {
   const handleLogout = () => {
     logoutUser();
     navigate('/');
-  };
-
-  const handleAddAddress = (e) => {
-    e.preventDefault();
-    if (!newAddress.trim()) return;
-    addAddress(newAddress.trim());
-    setNewAddress('');
   };
 
   const renderPersonal = () => (
@@ -156,21 +148,15 @@ const Profile = () => {
             {a.isDefault && <span className="address-badge">Основной</span>}
           </div>
         ))}
-        <form className="auth-form" onSubmit={handleAddAddress}>
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              value={newAddress}
-              onChange={(e) => setNewAddress(e.target.value)}
-              placeholder="г. Москва, ул. Примерная, д. 1, кв. 1"
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary btn-start">
-            + Добавить новый адрес
-          </button>
-        </form>
+        <button
+          className="btn btn-primary btn-start"
+          onClick={() => {
+            const address = prompt('Введите адрес доставки:');
+            if (address?.trim()) addAddress(address.trim());
+          }}
+        >
+          + Добавить новый адрес
+        </button>
       </div>
     </div>
   );
