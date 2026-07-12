@@ -16,17 +16,23 @@ export const UserProvider = ({ children }) => {
     };
   });
 
-  // Моковые начальные адреса
-  const [addresses, setAddresses] = useState([
-    { id: 1, address: 'г. Москва, ул. Ленина, д. 10, кв. 42', isDefault: true },
-    { id: 2, address: 'г. Москва, пр-кт Мира, д. 105, оф. 12', isDefault: false },
-  ]);
+  const [addresses, setAddresses] = useState(() => {
+    const saved = localStorage.getItem('stationery_addresses');
+    return saved ? JSON.parse(saved) : [
+      { id: 1, address: 'г. Москва, ул. Ленина, д. 10, кв. 42', isDefault: true },
+      { id: 2, address: 'г. Москва, пр-кт Мира, д. 105, оф. 12', isDefault: false },
+    ];
+  });
 
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('stationery_user', JSON.stringify(user));
   }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem('stationery_addresses', JSON.stringify(addresses));
+  }, [addresses]);
 
   useEffect(() => {
     fetch('http://localhost:5000/api/orders').then(r => r.json()).then(data => {

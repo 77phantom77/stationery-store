@@ -7,10 +7,11 @@ import { useNavigate } from 'react-router-dom';
 const Profile = () => {
   const { addToCart } = useCart();
   const { products } = useAppContext();
-  const { user, orders, addresses, updateProfile, logoutUser } = useUser();
+  const { user, orders, addresses, updateProfile, logoutUser, addAddress } = useUser();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('personal');
+  const [newAddress, setNewAddress] = useState('');
   
   // Локальное состояние формы редактирования
   const [formData, setFormData] = useState({
@@ -64,6 +65,13 @@ const Profile = () => {
   const handleLogout = () => {
     logoutUser();
     navigate('/');
+  };
+
+  const handleAddAddress = (e) => {
+    e.preventDefault();
+    if (!newAddress.trim()) return;
+    addAddress(newAddress.trim());
+    setNewAddress('');
   };
 
   const renderPersonal = () => (
@@ -148,9 +156,21 @@ const Profile = () => {
             {a.isDefault && <span className="address-badge">Основной</span>}
           </div>
         ))}
-        <button className="btn btn-primary btn-start" onClick={() => alert('Функция добавления адреса (в разработке)')}>
-          + Добавить новый адрес
-        </button>
+        <form className="auth-form" onSubmit={handleAddAddress}>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-control"
+              value={newAddress}
+              onChange={(e) => setNewAddress(e.target.value)}
+              placeholder="г. Москва, ул. Примерная, д. 1, кв. 1"
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary btn-start">
+            + Добавить новый адрес
+          </button>
+        </form>
       </div>
     </div>
   );
